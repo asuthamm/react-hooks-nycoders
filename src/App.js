@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 
 // child components
 import UsersContainer from "./components/UsersContainer";
@@ -7,13 +7,17 @@ import UserForm from "./components/UserForm";
 // Bootstrap
 import { Container } from "react-bootstrap";
 
-const App = ()=> {
-
+const App = () => {
   // state = {
   //   users: []
   // };
-  const [users, setUsers] = useState([])
-  
+  const [users, setUsers] = useState([]);
+
+  // componentDidMount()
+  useEffect(() => {
+    getUsers();
+    console.log("rendering");
+  }, []);
   // componentDidMount() {
   //   this.getUsers();
   // }
@@ -31,20 +35,18 @@ const App = ()=> {
       deleteUser(id);
     }
   };
-  
-  
+
   // FETCH FUNCTIONS
-  
+
   //GET
   const getUsers = () => {
     fetch("http://localhost:3004/users") // (function(response){ response.json() })
-
-    .then(resp => resp.json())
-    .then(usersOBJ => {
+      .then(resp => resp.json())
+      .then(usersOBJ => {
         // this.setState({
         //   users: usersOBJ
         // });
-        setUsers(usersOBJ)
+        setUsers(usersOBJ);
       });
   };
 
@@ -66,11 +68,11 @@ const App = ()=> {
         // this.setState({
         //   users: [...this.state.users, user] // this.state.users.concat(users)
         // });
-        setUsers([...this.state.users, user])
+        setUsers([...users, user]);
       });
-    };
-    
-    //DELETE
+  };
+
+  //DELETE
   const deleteUser = id => {
     fetch(`http://localhost:3004/users/${id}`, {
       method: "DELETE"
@@ -78,7 +80,7 @@ const App = ()=> {
       // this.setState({
       //   users: this.state.users.filter(user => user.id !== id)
       // });
-      setUsers(this.state.users.filter(user => user.id !== id))
+      setUsers(users.filter(user => user.id !== id));
     });
   };
 
@@ -88,7 +90,6 @@ const App = ()=> {
       <UsersContainer users={users} deleteUser={handleDelete} />
     </Container>
   );
-
-}
+};
 
 export default App;
